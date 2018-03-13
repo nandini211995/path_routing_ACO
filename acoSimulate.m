@@ -6,8 +6,8 @@ constant=0.01;
 initX=startX;
 initY=startY;
 antsReached=0;
-randomWalkDirection=0;
-stayCourseDistance=4;
+
+stayCourseDistance=6;
 j=1;
  for i=1:ants
      randomWalkDirection=randVal(1,8);

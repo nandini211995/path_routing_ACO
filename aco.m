@@ -9,7 +9,7 @@ columns=rows;
 grid on ;
 totObs=0;
 beta=4;  %the heuristic data constant
-ants=100;% number of ants
+ants=1000;% number of ants
 evaporationRate=0.4;
 initialPhermone=0.1;% initial phermone to all 8 degrees of freedome
 
