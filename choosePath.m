@@ -1,6 +1,8 @@
 function [select,maximum]=choosePath(up,upRight,right,downRight,down,downLeft,left,upLeft,y1,x1,distance,previousPath,beta,maximum)
  stayCourse=6;
 if(previousPath~=0)
+    
+    %---------prevent immediate oscillation between two points-------
    dontTake= mod(previousPath+4,8);
 
     if(dontTake==1)
@@ -21,12 +23,13 @@ if(previousPath~=0)
     upLeft=0.0001;
     end
 end
-
-if(up==Inf)
+%-----------------------------------------------------------------
+%--------if near goal--------
+   if(up==Inf)
    select=1;
-elseif(upRight==Inf)
-    select=2;
-elseif(right==Inf)
+   elseif(upRight==Inf)
+   select=2;
+   elseif(right==Inf)
    select=3;
    elseif(downRight==Inf)
    select=4;
@@ -38,15 +41,11 @@ elseif(right==Inf)
    select=7;
    elseif(upLeft==Inf)
    select=8;
-
+%----------------------------------
    
 
 else
-
-
-
-
-
+%----curent phermone * distance_remaining_inverse-----
     up=up*(distance(y1+1,x1));
     upRight=upRight*(distance(y1+1,x1));
     right=right*(distance(y1,x1+1));
@@ -56,8 +55,8 @@ else
     left=left*(distance(y1,x1-1));
     upLeft=upLeft*(distance(y1+1,x1-1));
      X= [up,upRight,right,downRight,down,downLeft,left,upLeft];
-    [val, maxProb]=max(X);
-
+%----------------------------------------------------
+%    [val, maxProb]=max(X);
 %      if(maximum==1)
 %    up=up*stayCourse;
 %     elseif(maximum==2)
@@ -97,7 +96,7 @@ else
 %      end
      
      
-    
+%-------------Calculate probability--------------------
 total=up+upRight+right+downRight+down+downLeft+left+upLeft;
     up=up/total;
     upRight=upRight/total;
@@ -107,14 +106,11 @@ total=up+upRight+right+downRight+down+downLeft+left+upLeft;
     downLeft=downLeft/total;
     left=left/total;
     upLeft=upLeft/total;
+%-----------------------------------------------------
 
 
-
-
+%----stochiastically choose next step-------
  X= [up,upRight,right,downRight,down,downLeft,left,upLeft];
-
-
-
 probs=cumsum(X);
 x=rand;
 if x>0 && x<probs(1)
@@ -134,6 +130,7 @@ elseif x>=probs(2) && x<probs(3)
   elseif x>=probs(7) && x<probs(8)
   select=8;
 end
+%---------------------------------------
 if(select~=maximum)
     maximum=select;
 disp(probs);

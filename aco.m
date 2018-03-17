@@ -1,16 +1,14 @@
 clc;
 clear;
 close;
-course=imread('office.png');
+course=imread('office.png');%read course with obstacles
 course=rgb2gray(course)/255;
-rows=128;
-maximum=0;
-columns=rows;
+rows=128;% set rows;
+columns=rows;%set columns
 grid on ;
-totObs=0;
 beta=4;  %the heuristic data constant
 ants=1000;% number of ants
-evaporationRate=0.4;
+evaporationRate=0.4;% the rate at which phermones evaporate
 initialPhermone=0.1;% initial phermone to all 8 degrees of freedome
 
 axis([1 rows 1 columns])
@@ -27,19 +25,15 @@ plot(endX, endY, 'ko', 'LineWidth',4);
 axis([1 rows 1 columns])
 hold on;
 
-distanceToGoal=distanceCal(rows+2,columns+2,endX,endY);
-distanceToStart=distanceCal(rows+2,columns+2,startX,startY);
-phermones=ones(rows+2,columns+2)*initialPhermone;
-phermones=boundaryZeroing(phermones,rows+2,columns+2);
-course=boundaryZeroing(course,rows+2,columns+2);
-fuel= round(sqrt(rows*rows+columns*columns))*4;
+distanceToGoal=distanceCal(rows+2,columns+2,endX,endY);%distance to goal from each pixel
+distanceToStart=distanceCal(rows+2,columns+2,startX,startY);%distance to start from each pixel
+phermones=ones(rows+2,columns+2)*initialPhermone;% phermones initialization
+phermones=boundaryZeroing(phermones,rows+2,columns+2);% boundary elements set to zero for out of bound scenarios
+course=boundaryZeroing(course,rows+2,columns+2);%same for phermones
+fuel= round(sqrt(rows*rows+columns*columns))*4;%it is the total distance ant can travel (diagonal of the map * constant)
 phermoneUpdate=fuel/4;%phermone update in each iteration
 stepsCount=0;
- 
-%  phermones(endY,endX)=15;
-%  ant(1).x(1)=ones(fuel);
-%  ant(1).y(1)=ones(fuel);
-
+%-----------------initializing obstacles of maps------------------------
  for i=1:128
      for j=1:128
          if(course(i,j)==0)
@@ -49,15 +43,7 @@ stepsCount=0;
          end
      end
  end
-%  for i=70:80
-%      for j=70:80
-%      phermones(i,j)=0;
-%      distanceToGoal(i,j)=0;
-%       distanceToStart(i,j)=0;
-%      end
-%  end
 [antsReached,phermones,minSteps]= acoSimulate(phermones,distanceToGoal,distanceToStart,startX,startY,endX,endY,phermoneUpdate,fuel,ants,beta,rows+2,columns+2,evaporationRate);
-
 plot(startX, startY, 'b*', 'LineWidth',4);
  surf(phermones);
 
